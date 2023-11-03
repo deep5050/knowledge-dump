@@ -1,4 +1,8 @@
 # Simulating a QEMU Device as a Switch with Rocker Configuration
+References:
+1. https://github.com/scottfeldman/qemu-rocker/blob/rocker/README
+2. [Rocker-switchdev-prototyping-vehicle.pdf (netfilter.org)](https://people.netfilter.org/pablo/netdev0.1/papers/Rocker-switchdev-prototyping-vehicle.pdf)
+
 
 To simulate a QEMU device as a switch, we'll use the `rocker` configuration with QEMU. You can use the provided Python script to generate the QEMU commands. Below is the script:
 
