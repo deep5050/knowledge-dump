@@ -4,6 +4,8 @@ References:
 2. [Rocker-switchdev-prototyping-vehicle.pdf (netfilter.org)](https://people.netfilter.org/pablo/netdev0.1/papers/Rocker-switchdev-prototyping-vehicle.pdf)
 
 
+# TAP interfaces
+
 To simulate a QEMU device as a switch, we'll use the `rocker` configuration with QEMU. You can use the provided Python script to generate the QEMU commands. Below is the script:
 
 ```python
@@ -207,3 +209,58 @@ ma1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 ...
 
 ```
+
+# Socket interfaces
+
+Alternatively, we can create socket interfaces to do the same thing
+
+## Socket devices
+
+```bash
+sudo qemu-system-x86_64 --enable-kvm -cpu host -smp 2 -m 2048 -name onie -boot order=cd,once=d -cdrom ./onie-recovery-x86_64-kvm_x86_64-r0.iso -drive file=qemu-hdd.qcow2,media=disk,if=virtio,index=0  -vnc 0.0.0.0:128 -device virtio-net,netdev=onienet,mac=52:54:00:13:34:1E -netdev user,id=onienet,hostfwd=tcp::4022-:22 -nographic -serial telnet:localhost:9300,server -device rocker,name=sw1,len-ports=2,ports[0]=dev0,ports[1]=dev1 -netdev socket,udp=127.0.0.1:1204,localaddr=127.0.0.1:1215,id=dev0 -netdev socket,udp=127.0.0.1:1206,localaddr=127.0.0.1:1217,id=dev1
+```
+
+### Explanation
+
+Let's break down the command step by step:
+
+```bash
+sudo qemu-system-x86_64 \
+--enable-kvm \
+-cpu host \
+-smp 2 \
+-m 2048 \
+-name onie \
+-boot order=cd,once=d \
+-cdrom ./onie-recovery-x86_64-kvm_x86_64-r0.iso \
+-drive file=qemu-hdd.qcow2,media=disk,if=virtio,index=0 \
+-vnc 0.0.0.0:128 \
+-device virtio-net,netdev=onienet,mac=52:54:00:13:34:1E \
+-netdev user,id=onienet,hostfwd=tcp::4022-:22 \
+-nographic \
+-serial telnet:localhost:9300,server \
+-device rocker,name=sw1,len-ports=2,ports[0]=dev0,ports[1]=dev1 \
+-netdev socket,udp=127.0.0.1:1204,localaddr=127.0.0.1:1215,id=dev0 \
+-netdev socket,udp=127.0.0.1:1206,localaddr=127.0.0.1:1217,id=dev1
+```
+
+- `--enable-kvm`: This enables KVM (Kernel-based Virtual Machine) acceleration for better performance.
+- `-cpu host`: This sets the CPU emulation mode to use the host CPU capabilities.
+- `-smp 2`: It specifies the number of virtual CPUs in the VM, in this case, 2 virtual CPUs.
+- `-m 2048`: This sets the amount of RAM for the VM to 2048 MB (2GB).
+- `-name onie`: Sets the name of the virtual machine to "onie".
+- `-boot order=cd,once=d`: It specifies the boot order with a CD-ROM first and then a one-time boot from the default drive.
+- `-cdrom ./onie-recovery-x86_64-kvm_x86_64-r0.iso`: This mounts the ISO file "onie-recovery-x86_64-kvm_x86_64-r0.iso" as a CD-ROM for booting.
+-  `-drive file=qemu-hdd.qcow2,media=disk,if=virtio,index=0`: It adds a virtual hard drive "qemu-hdd.qcow2" as the primary drive for the VM.
+- . `-vnc 0.0.0.0:128`: This sets up VNC (Virtual Network Computing) to listen on IP 0.0.0.0 (all available network interfaces) on port 128.
+-  `-device virtio-net,netdev=onienet,mac=52:54:00:13:34:1E`: It adds a virtual network device with a MAC address and associates it with the "onienet" network device.
+-  `-netdev user,id=onienet,hostfwd=tcp::4022-:22`: It creates a user mode network device named "onienet" and sets up port forwarding from host port 4022 to guest port 22.
+-  `-nographic`: This tells QEMU to run without a graphical interface.
+-  `-serial telnet:localhost:9300,server`: Sets up a serial port for telnet access to the VM on localhost, port 9300.
+-  `-device rocker,name=sw1,len-ports=2,ports[0]=dev0,ports[1]=dev1`: This configures a Rocker switch device with two ports, dev0 and dev1.
+- `-netdev socket,udp=127.0.0.1:1204,localaddr=127.0.0.1:1215,id=dev0`: Configures a socket-based network device with UDP communication for port 1204 and local address 1215 associated with dev0.
+-  `-netdev socket,udp=127.0.0.1:1206,localaddr=127.0.0.1:1217,id=dev1`: Similar to the above, but for dev1.
+
+This command sets up a virtual machine with specific CPU and memory settings, a bootable CD-ROM, virtual hard drive, networking, and a Rocker switch device. It also enables VNC and serial console access. You can adjust the parameters to suit your specific virtualization requirements.
+
+
