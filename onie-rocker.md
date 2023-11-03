@@ -1,5 +1,6 @@
-To simulate a QEMU device as a switch we need `rocker` configured with qemu.
-Use the below Python script to generate the qemu commands:
+# Simulating a QEMU Device as a Switch with Rocker Configuration
+
+To simulate a QEMU device as a switch, we'll use the `rocker` configuration with QEMU. You can use the provided Python script to generate the QEMU commands. Below is the script:
 
 ```python
 #!/usr/bin/env python3
@@ -14,13 +15,13 @@ def generate_qemu_command(config):
         '-smp', f'{config["cpu"]}',
         '-m', f'{config["ram"]}',
         '-name', 'onie',
-        '-boot', 'order=d,once=d',  # skipping cdrom, always boot from disk
+        '-boot', 'order=d,once=d',  # Skipping CD-ROM, always boot from disk
         '-drive', f'file={config["disk"]},media=disk,if=virtio,index=0',
         '-vnc', '0.0.0.0:128',
-        '-device', 'virtio-net,netdev=onienet,mac=52:54:00:13:34:1E',  # management interface assignment
-        '-netdev', 'user,id=onienet,hostfwd=tcp::4022-:22',  # management interface with SSH port forwarding
+        '-device', 'virtio-net,netdev=onienet,mac=52:54:00:13:34:1E',  # Management interface assignment
+        '-netdev', 'user,id=onienet,hostfwd=tcp::4022-:22',  # Management interface with SSH port forwarding
         '-nographic',
-        f'-serial telnet:localhost:{config["telnet_port"]},server',  # dynamic telnet port
+        f'-serial telnet:localhost:{config["telnet_port"]},server',  # Dynamic telnet port
     ]
 
     num_tap = config['num_tap_interfaces']
@@ -51,7 +52,7 @@ if __name__ == '__main__':
     main()
 ```
 
-Config file:
+Here is the configuration file (`qemu_config.json`):
 
 ```json
 {
@@ -63,6 +64,11 @@ Config file:
 }
 ```
 
-Here TAP is used to create the virtual interfaces for the guest OS
+Explanation:
+- The script generates QEMU commands based on the provided configuration.
+- It specifies CPU, RAM, disk, telnet port, and the number of TAP interfaces for the guest OS.
+- TAP interfaces are used to create virtual interfaces for the guest OS.
 
-> This command is tested on qemu version 2.11.1
+> Note: This command has been tested on QEMU version 2.11.1.
+
+You can run the script to generate the QEMU command for simulating a QEMU device as a switch with the specified configuration.
