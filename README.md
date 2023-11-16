@@ -6,10 +6,12 @@ Welcome to the "Knowledge Dump," a repository of comprehensive documentation cov
 
 Topics covered:
 
-`Linux`, `ONIE`, `dentOS`, `SONiC`, `qemu`
+`Linux`, `yocto`, `ONIE`, `dentOS`, `SONiC`, `qemu`
 
 
 ![image](https://github.com/deep5050/knowledge-dump/assets/27947066/d737eb85-ad83-4380-9915-a744929723cd)
+
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/f491d9eb-b443-4153-a34f-486323e0150e)
 
 ![image](https://github.com/deep5050/knowledge-dump/assets/27947066/806ca1cd-510f-4643-a211-90a9598ad13b) 
 
