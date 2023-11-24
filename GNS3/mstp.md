@@ -362,3 +362,395 @@ Bridge ID:
 ```
 
 ![hhhh](https://github.com/deep5050/knowledge-dump/assets/27947066/d51b21d6-c827-4257-8114-d88dced0a1d4)
+
+
+# Extra
+
+you will get a topology change packet when there is a change
+
+![Screenshot 2023-11-24 225912](https://github.com/deep5050/knowledge-dump/assets/27947066/77b1655c-c2cc-417d-8b28-2510fa7faa0a)
+
+# Introduce link speed to see what happens when MSTP decides the costs
+
+Let's see the current link speed of the connected ports of the switches
+
+## switch 1
+```bash
+
+
+/ #  ovs-ofctl show br0
+OFPT_FEATURES_REPLY (xid=0x2): dpid:0000ffffffffffff
+n_tables:254, n_buffers:0
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS QUEUE_STATS ARP_MATCH_IP
+actions: output enqueue set_vlan_vid set_vlan_pcp strip_vlan mod_dl_src mod_dl_dst mod_nw_src mod_nw_dst mod_nw_tos mod_tp_src mod_tp_dst
+ 1(eth0): addr:4e:ee:1c:a6:77:b7
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 2(eth1): addr:5a:b7:74:ac:d3:49
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 3(eth2): addr:d2:cb:ff:45:eb:35
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 4(eth3): addr:82:e3:cb:bb:a3:0f
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 5(eth4): addr:7a:b2:65:ea:cf:11
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 6(eth5): addr:22:5d:91:96:76:15
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 7(eth6): addr:42:21:cd:87:79:ba
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 8(eth7): addr:ce:2d:f3:ad:82:9c
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 9(eth8): addr:c6:ba:69:f4:f4:db
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 10(eth9): addr:ca:c9:de:91:57:6b
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 11(eth10): addr:de:cd:d6:71:07:12
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 12(eth11): addr:06:38:0b:b2:68:90
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 13(eth12): addr:ba:f4:7d:5d:dc:21
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 14(eth13): addr:1e:1f:81:6e:91:b7
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 15(eth14): addr:2a:7d:01:11:35:50
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 16(eth15): addr:c6:56:d3:46:b8:73
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ LOCAL(br0): addr:aa:bb:cc:dd:ee:ff
+     config:     0
+     state:      0
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
+
+
+```
+```bash
+/ # cat /sys/class/net/eth4/speed  < --- switch1 <-> swith3
+10
+/ # cat /sys/class/net/eth6/speed   <--- switch1 <-> switch 2
+10
+```
+## switch 2
+
+```bash
+
+/ # ovs-ofctl show br0
+OFPT_FEATURES_REPLY (xid=0x2): dpid:0000aee3d73be644
+n_tables:254, n_buffers:0
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS QUEUE_STATS ARP_MATCH_IP
+actions: output enqueue set_vlan_vid set_vlan_pcp strip_vlan mod_dl_src mod_dl_dst mod_nw_src mod_nw_dst mod_nw_tos mod_tp_src mod_tp_dst
+ 1(eth0): addr:6a:c4:5d:ef:bb:f5
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 2(eth1): addr:02:4b:0a:d0:d0:4f
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 3(eth2): addr:3a:b0:d9:57:b5:92
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 4(eth3): addr:ce:fc:f1:67:a6:19
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 5(eth4): addr:7e:c9:b1:a8:77:27
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 6(eth5): addr:b2:07:c3:ca:5f:83
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 7(eth6): addr:6e:8a:ad:b9:70:b7
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 8(eth7): addr:6e:e1:50:fc:c7:ca
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 9(eth8): addr:6e:c2:2c:15:e7:4e
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 10(eth9): addr:92:32:0d:73:03:7a
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 11(eth10): addr:76:d4:4e:00:59:fe
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 12(eth11): addr:b2:b2:bc:6a:f4:6b
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 13(eth12): addr:e6:2e:db:29:9e:e5
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 14(eth13): addr:f2:6b:8f:de:c1:52
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 15(eth14): addr:b6:7b:5e:1a:85:e3
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 16(eth15): addr:1e:08:fa:73:8f:44
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ LOCAL(br0): addr:ae:e3:d7:3b:e6:44
+     config:     0
+     state:      0
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
+
+
+```
+```bash
+/ # cat /sys/class/net/eth3/speed    < ---- swith2 <-> switch1 
+10
+/ # cat /sys/class/net/eth5/speed  < ---- swith2 <-> switch3
+10
+
+```
+
+## switch 3
+
+
+```bash
+
+/ # ovs-ofctl show br0
+OFPT_FEATURES_REPLY (xid=0x2): dpid:0000e29553910c41
+n_tables:254, n_buffers:0
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS QUEUE_STATS ARP_MATCH_IP
+actions: output enqueue set_vlan_vid set_vlan_pcp strip_vlan mod_dl_src mod_dl_dst mod_nw_src mod_nw_dst mod_nw_tos mod_tp_src mod_tp_dst
+ 1(eth0): addr:1a:29:5b:ab:ef:b9
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 2(eth1): addr:66:a9:99:45:26:94
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 3(eth2): addr:06:bd:bd:78:89:0a
+     config:     0
+     state:      STP_BLOCK
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 4(eth3): addr:06:12:99:76:18:96
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 5(eth4): addr:0e:9d:6c:e0:d8:51
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 6(eth5): addr:9e:0f:73:15:c6:7d
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 7(eth6): addr:02:a6:d2:59:d7:00
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 8(eth7): addr:6a:fe:ff:dc:58:5c
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 9(eth8): addr:6a:c1:14:76:4e:2c
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 10(eth9): addr:86:a5:34:3e:b5:4a
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 11(eth10): addr:a6:77:56:6a:04:31
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 12(eth11): addr:4a:ee:39:3a:7c:5e
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 13(eth12): addr:9e:85:18:fa:e9:5b
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 14(eth13): addr:fa:5d:a6:8b:e9:7a
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 15(eth14): addr:06:7e:95:da:40:30
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ 16(eth15): addr:1e:2b:b4:d6:5b:9c
+     config:     0
+     state:      STP_FORWARD
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ LOCAL(br0): addr:e2:95:53:91:0c:41
+     config:     0
+     state:      0
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
+/ #
+
+
+```
+
+```bash
+/ # cat /sys/class/net/eth0/speed  <--- swith3 <-> swith1
+10
+/ # cat /sys/class/net/eth2/speed   <--- swith3 <-> switch2
+10
+/ #
+
+
+```
+
+```bash
+
+/ # ovs-vsctl list Interface eth2
+_uuid               : 2379b2cd-4e64-4d95-a1d4-a7bb05a7d5e1
+admin_state         : up
+bfd                 : {}
+bfd_status          : {}
+cfm_fault           : []
+cfm_fault_status    : []
+cfm_flap_count      : []
+cfm_health          : []
+cfm_mpid            : []
+cfm_remote_mpids    : []
+cfm_remote_opstate  : []
+duplex              : full
+error               : []
+external_ids        : {}
+ifindex             : 43
+ingress_policing_burst: 0
+ingress_policing_kpkts_burst: 0
+ingress_policing_kpkts_rate: 0
+ingress_policing_rate: 0
+lacp_current        : []
+link_resets         : 0
+link_speed          : 10000000
+link_state          : up
+lldp                : {}
+mac                 : []
+mac_in_use          : "06:bd:bd:78:89:0a"
+mtu                 : 1500
+mtu_request         : []
+name                : eth2
+ofport              : 3
+ofport_request      : []
+options             : {}
+other_config        : {}
+statistics          : {collisions=0, rx_bytes=95050, rx_crc_err=0, rx_dropped=0, rx_errors=0, rx_frame_err=0, rx_missed_errors=0, rx_multicast_packets=0, rx_over_err=0, rx_packets=1795, tx_bytes=53611, tx_dropped=755, tx_errors=0, tx_packets=1009}
+status              : {driver_name=tun, driver_version="1.6", firmware_version=""}
+type                : ""
+/ #
+
+```
+
+## current topology
+
+1.  swith1 is still the root switch
+2.  `eth2` of switch3 is in block mode  (same as the first example)
+
+
+## Let's now upgrade the `eth2` of switch3 to a 10 Gig link and see what happens
+
+```bash
+ovs-vsctl set Interface eth2 link_speed=10000
+
+```
+
+
+
+
