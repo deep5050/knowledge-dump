@@ -221,3 +221,144 @@ Bridge ID:
 ```
 
 ![Screenshot 2023-11-24 221136](https://github.com/deep5050/knowledge-dump/assets/27947066/9d7fde2f-d9bb-42c3-b662-744aa317fdfe)
+
+
+
+
+# Let's introduce a redundant path and see
+
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/534d652d-3b96-48d3-a639-430bc02926b2)
+
+I have introdued two new path ( switch3 <-> switch1, switch1 <-> switch2)
+
+now check the results
+## switch 1
+
+```bash
+/ # ovs-appctl stp/show
+---- br0 ----
+Root ID:
+  stp-priority  32768
+  stp-system-id   aa:bb:cc:dd:ee:ff
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+  This bridge is the root                      <----------------------------
+
+Bridge ID:
+  stp-priority  32768
+  stp-system-id   aa:bb:cc:dd:ee:ff
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+
+  Interface  Role       State      Cost  Pri.Nbr
+  ---------- ---------- ---------- ----- -------
+  eth8       designated forwarding 100   128.1
+  eth11      designated forwarding 100   128.2
+  eth4       designated forwarding 100   128.3
+  eth10      designated forwarding 100   128.4
+  eth9       designated forwarding 100   128.5
+  eth7       designated forwarding 100   128.6
+  eth0       designated forwarding 100   128.7
+  eth13      designated forwarding 100   128.8
+  eth5       designated forwarding 100   128.9
+  eth3       designated forwarding 100   128.10
+  eth1       designated forwarding 100   128.11
+  eth6       designated forwarding 100   128.12
+  eth12      designated forwarding 100   128.13
+  eth14      designated forwarding 100   128.14
+  eth2       designated forwarding 100   128.15
+  eth15      designated forwarding 100   128.16
+
+```
+
+## Switch 2
+
+```bash
+/ # ovs-appctl stp/show
+---- br0 ----
+Root ID:
+  stp-priority  32768
+  stp-system-id   aa:bb:cc:dd:ee:ff
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+  root-port       eth1
+  root-path-cost  100
+
+Bridge ID:
+  stp-priority  32768
+  stp-system-id   ae:e3:d7:3b:e6:44
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+
+  Interface  Role       State      Cost  Pri.Nbr
+  ---------- ---------- ---------- ----- -------
+  eth8       designated forwarding 100   128.1
+  eth11      designated forwarding 100   128.2
+  eth4       designated forwarding 100   128.3
+  eth10      designated forwarding 100   128.4
+  eth9       designated forwarding 100   128.5
+  eth7       designated forwarding 100   128.6
+  eth0       designated forwarding 100   128.7
+  eth13      designated forwarding 100   128.8
+  eth5       designated forwarding 100   128.9
+  eth1       root       forwarding 100   128.10
+  eth3       alternate  blocking   100   128.11      <--- switch2 <-> switch1
+  eth6       designated forwarding 100   128.12
+  eth12      designated forwarding 100   128.13
+  eth14      designated forwarding 100   128.14
+  eth2       designated forwarding 100   128.15
+  eth15      designated forwarding 100   128.16
+
+/ #
+```
+
+
+## switch 3
+
+```bash
+/ # ovs-appctl stp/show
+---- br0 ----
+Root ID:
+  stp-priority  32768
+  stp-system-id   aa:bb:cc:dd:ee:ff
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+  root-port       eth0
+  root-path-cost  100
+
+Bridge ID:
+  stp-priority  32768
+  stp-system-id   e2:95:53:91:0c:41
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+
+  Interface  Role       State      Cost  Pri.Nbr
+  ---------- ---------- ---------- ----- -------
+  eth11      designated forwarding 100   128.1
+  eth8       designated forwarding 100   128.2
+  eth4       designated forwarding 100   128.3
+  eth10      designated forwarding 100   128.4
+  eth7       designated forwarding 100   128.5
+  eth9       designated forwarding 100   128.6
+  eth0       root       forwarding 100   128.7
+  eth13      designated forwarding 100   128.8
+  eth5       designated forwarding 100   128.9
+  eth1       alternate  blocking   100   128.10   <----- switch3 <-> switch2
+  eth3       alternate  blocking   100   128.11   < ---- switch3 <-> switch1
+  eth6       designated forwarding 100   128.12
+  eth12      designated forwarding 100   128.13
+  eth2       designated forwarding 100   128.14
+  eth14      designated forwarding 100   128.15
+  eth15      designated forwarding 100   128.16
+
+/ #
+
+```
+
+![hhhh](https://github.com/deep5050/knowledge-dump/assets/27947066/d51b21d6-c827-4257-8114-d88dced0a1d4)
