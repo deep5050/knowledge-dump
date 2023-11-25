@@ -694,7 +694,7 @@ OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
 
 
 ```
-
+> ovs-vsctl list Bridge br0
 ```bash
 
 / # ovs-vsctl list Interface eth2
@@ -752,5 +752,14 @@ ovs-vsctl set Interface eth2 link_speed=10000
 ```
 
 
+# some other scenario
 
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/a5480339-f174-4819-82fc-9b606a877a52)
+
+# MSTP regions and revisions
+
+ Now we are gonna take look at mstp regions. below is the test network
+ ![image](https://github.com/deep5050/knowledge-dump/assets/27947066/78ce57aa-8313-42fd-91f4-f6dc4e10c9fc)
+
+ 
 
