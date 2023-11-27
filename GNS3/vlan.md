@@ -5,6 +5,13 @@ Check out the test network above! It's a cool setup where any device can ping an
 Now, let's spice things up by introducing VLANs. PC1 and PC4 are now BFFs on VLAN #10, while PC2 and PC3 are rocking VLAN #20.
 on switch1 
 
+on both switches
+
+```bash
+ ovs-vsctl set port eth0 trunk=10,20
+
+```
+
 ```bash
 ovs-vsctl set port eth1 tag=10 #pc1
 ovs-vsctl set port eth2 tag=20 #pc2
@@ -187,6 +194,7 @@ type                : ""
 
 
 now let us ping other PCs from PC1
+
 ```bash
 PC1>
 PC1>
