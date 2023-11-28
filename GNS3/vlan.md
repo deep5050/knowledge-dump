@@ -104,6 +104,17 @@ Observe no broadcast packets in the capture:
 
 ## Verify the trunk concept
 
+As we have not introduced trunks on eth0 of both switches all the traffic from switch 1 to switch2 and vice versa happens.
+1. let's assign eth0 of both switches to carry traffic for VLAN 10 only and see what happens!.
+
+```bash
+ovs-vsctl set port eth0 trunk=10
+```
+
+2. open a wireshark between two switches
+3. ping from any pc from one switch to another
+
+TODO: 
 
 ## Extra commands
  
