@@ -105,16 +105,81 @@ Observe no broadcast packets in the capture:
 ## Verify the trunk concept
 
 As we have not introduced trunks on eth0 of both switches all the traffic from switch 1 to switch2 and vice versa happens.
-1. let's assign eth0 of both switches to carry traffic for VLAN 10 only and see what happens!
+1. let's assign eth0 of both/either switches to carry traffic for VLAN 10 only and see what happens!
+
+```bash
+ovs-vsctl set port eth0 trunk=10
+```
+result 
+
+```bash
+.....
+Port eth0
+            trunks: [10]
+            Interface eth0
+
+....
+```
+2. open a wireshark between two switches
+3. Ping from any PC from one switch to another (say PC1 to PC5)
+
+result 
+
+```bash
+PC1> ping 192.168.10.30
+
+84 bytes from 192.168.10.30 icmp_seq=1 ttl=64 time=5.619 ms
+84 bytes from 192.168.10.30 icmp_seq=2 ttl=64 time=4.237 ms
+84 bytes from 192.168.10.30 icmp_seq=3 ttl=64 time=4.213 ms
+84 bytes from 192.168.10.30 icmp_seq=4 ttl=64 time=6.439 ms
+84 bytes from 192.168.10.30 icmp_seq=5 ttl=64 time=3.220 ms
+
+PC1>
+```
+
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/02ef4eba-e5e9-4010-b958-fd6912b7a1c9)
+
+now ping PC2 to PC3
+
+```bash
+PC3> ping 192.168.20.10
+
+host (192.168.20.10) not reachable
+
+```
+
+
+See!
+
+### Now let us do a small experiment
+
+we assign VLAN #10 only on switch 1 eth0 port, but assign both VLAN #10,#20 on swutch 2 eth0 interface.
+
+on switch 1
 
 ```bash
 ovs-vsctl set port eth0 trunk=10
 ```
 
-2. open a wireshark between two switches
-3. Ping from any PC from one switch to another
+on switch 2
 
-TODO: 
+```bash
+ovs-vsctl set port eth= trunk=10,20
+```
+
+This should let VLAN #20 packets from Switch 2 but block on Switch 1
+
+let's verify by pinging PC2 from PC3. we should see ARP packets on the trunk line.
+
+```bash
+PC3> ping 192.168.20.10
+
+host (192.168.20.10) not reachable
+```
+
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/5f11bb89-6bee-4928-bbe2-daf196865009)
+
+see! the packets come to the switch 1 but it rejects.
 
 
 ## Inspect the packets
