@@ -105,18 +105,27 @@ Observe no broadcast packets in the capture:
 ## Verify the trunk concept
 
 As we have not introduced trunks on eth0 of both switches all the traffic from switch 1 to switch2 and vice versa happens.
-1. let's assign eth0 of both switches to carry traffic for VLAN 10 only and see what happens!.
+1. let's assign eth0 of both switches to carry traffic for VLAN 10 only and see what happens!
 
 ```bash
 ovs-vsctl set port eth0 trunk=10
 ```
 
 2. open a wireshark between two switches
-3. ping from any pc from one switch to another
+3. Ping from any PC from one switch to another
 
 TODO: 
+
+
+## Inspect the packets
+
+One important thing that needs to be cleared is that when a PC sends out a packet it does not know anything about the VLAN. It's a switch's responsibility to put the VLAN info before it passes it to other ends.
+
+below is a side-by-side comparison of an ICMP packet. on the left it's from PC2, on the right side, it is towards switch2 from switch1.
+
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/ce5a9139-8864-46af-88b8-a68955c8c28d)
 
 ## Extra commands
  
  - clear VLAN tags from interfaces  `ovs-vsctl clear port eth2 tag`
- - remove TRUNK from interfaces `ovs-vsctl clear port eth2 trunck`
+ - remove TRUNK from interfaces `ovs-vsctl clear port eth2 trunk`
