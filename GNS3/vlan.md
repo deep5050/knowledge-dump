@@ -125,6 +125,13 @@ below is a side-by-side comparison of an ICMP packet. on the left it's from PC2,
 
 ![image](https://github.com/deep5050/knowledge-dump/assets/27947066/ce5a9139-8864-46af-88b8-a68955c8c28d)
 
+
+
+
+
+
+
+
 ## Extra commands
  
  - clear VLAN tags from interfaces  `ovs-vsctl clear port eth2 tag`
