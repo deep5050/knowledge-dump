@@ -758,8 +758,214 @@ ovs-vsctl set Interface eth2 link_speed=10000
 
 # MSTP regions and revisions
 
- Now we are gonna take look at mstp regions. below is the test network
+ Now we are gonna take a look at mstp regions. below is the test network
  ![image](https://github.com/deep5050/knowledge-dump/assets/27947066/78ce57aa-8313-42fd-91f4-f6dc4e10c9fc)
 
+
  
+## Other scenario, modify cost of a path
+
+consider the below scenario where VLANs are configured. `eth0` of both the switches is configured as a trunk port for (vlan #10,#20)
+The other `eth10` port of the two switches is just an access port. 
+
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/bf6a1a44-f8bf-4b99-8907-6c0a7a5c6865)
+
+
+Running MSTP on both switches leaves trunk ports to be blocking.
+
+see the side-by-side comparison of the Wireshark capture. (when we try to ping from PC6 which is not on any vlan to any other PC)
+ 
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/09b9fd8c-871e-45d3-b1e2-9c2c8858b632)
+
+see there are no ARP packets on the right side (block path)!
+
+One important thing to know is that "blocking" does not mean the path is totally deactivated or down. we still can see STP packets on the blocking path.
+
+Now let us manually set the cost of the trunk line to high so that MSTP blocks the access ports instead of the trunk ports.
+
+
+on switch 1
+
+```bash
+/ # ovs-appctl stp/show
+---- br0 ----
+Root ID:
+  stp-priority  32768
+  stp-system-id   1e:1f:59:ea:d8:4a
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+  This bridge is the root
+
+Bridge ID:
+  stp-priority  32768
+  stp-system-id   1e:1f:59:ea:d8:4a
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+
+  Interface  Role       State      Cost  Pri.Nbr
+  ---------- ---------- ---------- ----- -------
+  eth8       designated forwarding 100   128.1
+  eth11      designated forwarding 100   128.2
+  eth4       designated forwarding 100   128.3
+  eth10      designated forwarding 100   128.4
+  eth7       designated forwarding 100   128.5
+  eth9       designated forwarding 100   128.6
+  eth0       designated forwarding 100   128.7
+  eth13      designated forwarding 100   128.8
+  eth5       designated forwarding 100   128.9
+  eth3       designated forwarding 100   128.10
+  eth1       designated forwarding 100   128.11
+  eth6       designated forwarding 100   128.12
+  eth12      designated forwarding 100   128.13
+  eth14      designated forwarding 100   128.14
+  eth2       designated forwarding 100   128.15
+  eth15      designated forwarding 100   128.16
+
+
+
+```
+
+on switch 2
+
+```bash
+ # ovs-appctl stp/show
+---- br0 ----
+Root ID:
+  stp-priority  32768
+  stp-system-id   1e:1f:59:ea:d8:4a
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+  root-port       eth10
+  root-path-cost  100
+
+Bridge ID:
+  stp-priority  32768
+  stp-system-id   7a:c3:33:11:c5:44
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+
+  Interface  Role       State      Cost  Pri.Nbr
+  ---------- ---------- ---------- ----- -------
+  eth11      designated forwarding 100   128.1
+  eth8       designated forwarding 100   128.2
+  eth4       designated forwarding 100   128.3
+  eth10      root       forwarding 100   128.4
+  eth7       designated forwarding 100   128.5
+  eth9       designated forwarding 100   128.6
+  eth0       alternate  blocking   100   128.7      <-- trunk port is blocked
+  eth13      designated forwarding 100   128.8
+  eth5       designated forwarding 100   128.9
+  eth3       designated forwarding 100   128.10
+  eth1       designated forwarding 100   128.11
+  eth6       designated forwarding 100   128.12
+  eth12      designated forwarding 100   128.13
+  eth14      designated forwarding 100   128.14
+  eth2       designated forwarding 100   128.15
+  eth15      designated forwarding 100   128.16
+
+
+```
+
+## Decrease path cost for the trunk ports
+
+On both switches
+
+```bash
+ovs-vsctl set Port eth1 other_config:stp-path-cost=10
+```
+
+This command sets a path cost of 10 for the trunk port. Lower path costs are preferred by MSTP.
+
+Let's see the MSTP status on both switches now
+
+on switch 1
+
+```bash
+/ # ovs-appctl stp/show
+---- br0 ----
+Root ID:
+  stp-priority  32768
+  stp-system-id   1e:1f:59:ea:d8:4a
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+  This bridge is the root
+
+Bridge ID:
+  stp-priority  32768
+  stp-system-id   1e:1f:59:ea:d8:4a
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+
+  Interface  Role       State      Cost  Pri.Nbr
+  ---------- ---------- ---------- ----- -------
+  eth8       designated forwarding 100   128.1
+  eth11      designated forwarding 100   128.2
+  eth4       designated forwarding 100   128.3
+  eth10      designated forwarding 100   128.4
+  eth7       designated forwarding 100   128.5
+  eth9       designated forwarding 100   128.6
+  eth0       designated forwarding 10    128.7
+  eth13      designated forwarding 100   128.8
+  eth5       designated forwarding 100   128.9
+  eth3       designated forwarding 100   128.10
+  eth1       designated forwarding 100   128.11
+  eth6       designated forwarding 100   128.12
+  eth12      designated forwarding 100   128.13
+  eth14      designated forwarding 100   128.14
+  eth2       designated forwarding 100   128.15
+  eth15      designated forwarding 100   128.16
+
+```
+on switch 2
+
+```bash
+
+/ # ovs-appctl stp/show
+---- br0 ----
+Root ID:
+  stp-priority  32768
+  stp-system-id   1e:1f:59:ea:d8:4a
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+  root-port       eth0
+  root-path-cost  10
+
+Bridge ID:
+  stp-priority  32768
+  stp-system-id   7a:c3:33:11:c5:44
+  stp-hello-time  2s
+  stp-max-age     20s
+  stp-fwd-delay   15s
+
+  Interface  Role       State      Cost  Pri.Nbr
+  ---------- ---------- ---------- ----- -------
+  eth11      designated forwarding 100   128.1
+  eth8       designated forwarding 100   128.2
+  eth4       designated forwarding 100   128.3
+  eth10      alternate  blocking   100   128.4    <------- access port is blocked
+  eth7       designated forwarding 100   128.5
+  eth9       designated forwarding 100   128.6
+  eth0       root       listening  10    128.7
+  eth13      designated forwarding 100   128.8
+  eth5       designated forwarding 100   128.9
+  eth3       designated forwarding 100   128.10
+  eth1       designated forwarding 100   128.11
+  eth6       designated forwarding 100   128.12
+  eth12      designated forwarding 100   128.13
+  eth14      designated forwarding 100   128.14
+  eth2       designated forwarding 100   128.15
+  eth15      designated forwarding 100   128.16
+
+```
+
+we have successfully managed to influence MSTP to choose the trunk port over the access port!
+
+
 
