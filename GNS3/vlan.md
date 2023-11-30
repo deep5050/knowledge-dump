@@ -193,8 +193,23 @@ below is a side-by-side comparison of an ICMP packet. on the left it's from PC2,
 
 
 
+## Native VLAN
+Let us now understand the concept of native vlan on the below network
+---->
+
+PC6 and PC7 are not under any VLAN. let's convert the trunk line to an access line temporarily and see what is the content of the packets while we try to ping pC7 from PC6. we start a Wireshark capture between SW1 and SW2.
 
 
+on both switches
+
+```bash
+ovs-vsctl clear port eth0 trunk
+```
+----> 
+
+see the ICMP request packets from PC6.
+
+there is no VLAN as usual.
 
 
 ## Extra commands
