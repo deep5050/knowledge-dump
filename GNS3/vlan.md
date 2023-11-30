@@ -195,7 +195,9 @@ below is a side-by-side comparison of an ICMP packet. on the left it's from PC2,
 
 ## Native VLAN
 Let us now understand the concept of native vlan on the below network
----->
+
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/7f2233b1-40b1-4b7d-85ee-f27aabb81f27)
+
 
 PC6 and PC7 are not under any VLAN. let's convert the trunk line to an access line temporarily and see what is the content of the packets while we try to ping pC7 from PC6. we start a Wireshark capture between SW1 and SW2.
 
@@ -205,12 +207,20 @@ on both switches
 ```bash
 ovs-vsctl clear port eth0 trunk
 ```
-----> 
-
 see the ICMP request packets from PC6.
+
+![image](https://github.com/deep5050/knowledge-dump/assets/27947066/ef37544b-5a7f-4701-ae22-53bad57975fb)
 
 there is no VLAN as usual.
 
+now configure Native vlan on eth0 ports of the both switches.
+
+```bash
+ovs-vsctl set port eth0 native_vlan=50
+```
+
+
+TODO=================================================
 
 ## Extra commands
  
