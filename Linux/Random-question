@@ -1,4 +1,4 @@
-# when we build custom application/kernel modules, we #include various .h files. how does the compiler know where to find those .h files?
+### when we build custom application/kernel modules, we include various .h files. how does the compiler know where to find those .h files?
 
 When building a custom application or kernel module in Linux that includes various `.h` (header) files, the compiler needs to know where to find these header files for proper compilation. The compiler uses a set of predefined paths to search for header files, including:
 
