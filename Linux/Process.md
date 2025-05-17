@@ -1,10 +1,12 @@
-![[Attachments/Pasted image 20250511133217.png]]
+
+![Pasted image 20250511133217](https://github.com/user-attachments/assets/166e7dcc-5d14-4661-9156-1e513767ad44)
+
 Before we start:
 - Byte stream: Each <mark style="background: #BBFABBA6;">read operation may read an arbitrary number of bytes</mark> from the IPC facility, regardless of the size of blocks written by the writer
 - Message: Each read operation<mark style="background: #BBFABBA6;"> reads a whole message, as written by the writer process</mark>. It is <mark style="background: #FFB8EBA6;">not possible to read part of a message</mark>, leaving the remainder on the IPC facility; nor is it possible to read multiple messages in a single read operation.
 ## Unnamed Pipes
+![Pasted image 20250511134316](https://github.com/user-attachments/assets/f04947ff-03d0-46ea-b02f-e456fa7a00c1)
 
-![[Attachments/Pasted image 20250511134316.png]]
 
 - **Creation:** `pipe()` system call creates two file descriptors (read and write ends) within the calling process.
 - **Direction:** Unidirectional data flow <mark style="background: #BBFABBA6;">(write end → read end</mark>).
