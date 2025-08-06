@@ -54,3 +54,118 @@ Memory allocation in the kernel is a critical function that ensures efficient us
 | **Concurrency**        | Requires locking for safe access      | Designed for concurrent access with minimal locking | Uses page tables and may require locks for page management |
 
 
+## 🛠️ Requesting Memory in Kernel Code
+
+In kernel development, memory allocation is typically done using specific functions provided by the kernel's memory management subsystem. Here’s how you can request memory in kernel code.
+
+### 📝 Common Memory Allocation Functions
+
+1. **`kmalloc`**:
+   - This is the most commonly used function for dynamic memory allocation in the kernel.
+   - **Usage**: 
+     ```c
+     void *ptr = kmalloc(size_t size, gfp_t flags);
+     ```
+   - **Parameters**:
+     - `size`: The number of bytes to allocate.
+     - `flags`: Allocation flags that control the behavior of the allocation (e.g., `GFP_KERNEL` for normal kernel allocations).
+
+2. **`kcalloc`**:
+   - Similar to `kmalloc`, but it also initializes the allocated memory to zero.
+   - **Usage**:
+     ```c
+     void *ptr = kcalloc(size_t n, size_t size, gfp_t flags);
+     ```
+   - **Parameters**:
+     - `n`: Number of elements to allocate.
+     - `size`: Size of each element.
+     - `flags`: Allocation flags.
+
+3. **`krealloc`**:
+   - Used to resize previously allocated memory.
+   - **Usage**:
+     ```c
+     void *ptr = krealloc(void *ptr, size_t new_size, gfp_t flags);
+     ```
+   - **Parameters**:
+     - `ptr`: Pointer to the previously allocated memory.
+     - `new_size`: New size for the memory block.
+     - `flags`: Allocation flags.
+
+4. **`kfree`**:
+   - Used to free memory that was previously allocated with `kmalloc`, `kcalloc`, or `krealloc`.
+   - **Usage**:
+     ```c
+     kfree(void *ptr);
+     ```
+
+### ⚙️ Example Code Snippet
+
+Here’s a simple example of how to allocate and free memory in kernel code:
+
+```c
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/slab.h>
+
+MODULE_LICENSE("GPL");
+
+static int __init my_module_init(void) {
+    void *my_memory;
+    
+    // Request memory
+    my_memory = kmalloc(1024, GFP_KERNEL); // Allocate 1024 bytes
+    if (!my_memory) {
+        printk(KERN_ERR "Memory allocation failed\n");
+        return -ENOMEM; // Return error if allocation fails
+    }
+
+    // Use the allocated memory...
+
+    // Free the allocated memory
+    kfree(my_memory);
+    return 0;
+}
+
+static void __exit my_module_exit(void) {
+    printk(KERN_INFO "Module exiting\n");
+}
+
+module_init(my_module_init);
+module_exit(my_module_exit);
+```
+
+### 🛡️ Important Considerations
+
+- **Error Handling**: Always check if the memory allocation was successful by verifying that the returned pointer is not `NULL`.
+- **Memory Flags**: Use appropriate flags based on the context of your allocation. For example, `GFP_KERNEL` is used for allocations that can sleep, while `GFP_ATOMIC` is used for allocations that cannot sleep.
+- **Freeing Memory**: Always free any allocated memory using `kfree` to prevent memory leaks.
+
+## ⚙️ Available `gfp_t` Flags in Kernel Memory Allocation
+
+The `gfp_t` flags in the Linux kernel control the behavior of memory allocation requests. These flags determine how the kernel should handle the allocation, including whether it can sleep, whether it should be reclaimable, and other characteristics. Here are some commonly used `gfp_t` flags:
+
+### 📝 Common `gfp_t` Flags
+
+| Flag                     | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| **`GFP_KERNEL`**        | Standard allocation flag for kernel code that can sleep.                   |
+| **`GFP_ATOMIC`**        | Used for allocations that cannot sleep, typically in interrupt context.     |
+| **`GFP_USER`**          | Used for user-space allocations, allowing the kernel to reclaim memory.     |
+| **`GFP_NOWAIT`**        | Allocation will not block; if memory is not available, it returns `NULL`.   |
+| **`GFP_HIGHUSER`**      | Allocates high memory for user space, typically above the 1 GB mark.       |
+| **`GFP_DMA`**           | Allocates memory suitable for DMA (Direct Memory Access) operations.        |
+| **`GFP_RECLAIMABLE`**   | Allows the kernel to reclaim memory from caches if necessary.               |
+| **`GFP_NOFS`**          | Prevents file system operations during allocation, useful in file system code. |
+| **`GFP_NOIO`**          | Prevents I/O operations during allocation, useful in contexts where I/O is not allowed. |
+| **`GFP_WAIT`**          | Allows the allocation to block if necessary, typically used in non-atomic contexts. |
+| **`GFP_HIGH`**          | Requests high-order memory allocations, which may be less likely to succeed. |
+| **`GFP_ZERO`**          | Allocates memory and initializes it to zero.                                |
+
+### 🛡️ Usage Considerations
+
+- **Choosing Flags**: The choice of flags depends on the context in which memory is being allocated. For example, use `GFP_ATOMIC` in interrupt handlers where sleeping is not allowed.
+- **Combining Flags**: You can combine multiple flags using the bitwise OR operator (`|`) to customize the allocation behavior further.
+- **Performance**: Some flags may impact performance, especially those that allow sleeping or reclaiming memory. Always consider the implications of the flags you choose.
+
+By understanding and using these `gfp_t` flags appropriately, you can manage memory allocation in the kernel more effectively, ensuring that your code behaves as expected in various contexts.
