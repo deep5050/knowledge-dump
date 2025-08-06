@@ -1,0 +1,37 @@
+
+- <mark style="background: #BBFABBA6;">Use keyword `volatile` when reading a memory-mapped address /</mark> variable shared with ISR or multi-threading. Otherwise compiler will optimized the code in a way that it will not reflect the address’s actual value.
+-  When<mark style="background: #BBFABBA6;"> defining a `struct`, the compiler might add **padding** between members </mark>or at the end of the struct for alignment purposes, even if you define members consecutively. This means `sizeof(struct MyStruct)` might be greater than the sum of the sizes of its individual members. You can sometimes influence this with compiler-specific pragmas (`#pragma pack`) but it's generally best to rely on proper alignment and be aware of its existence.
+-  **`static` Keyword Overload:** The<mark style="background: #FFB8EBA6;"> `static` keyword in C has few distinct meanings </mark>depending on its context, which can be confusing for beginners:
+
+	**Global/File Scope:** When <mark style="background: #BBFABBA6;">applied to a global variable or function, `static` restricts its *visibility* to the current compilation unit (the file it's declared in)</mark>. This prevents naming conflicts when linking multiple files.
+	**Function Scope:** When <mark style="background: #BBFABBA6;">applied to a local variable inside a function</mark>, `static` changes its **storage duration** from automatic (stack) to static (data/BSS segment).<mark style="background: #BBFABBA6;"> The variable retains its value between function calls.</mark>
+
+-  When you `free()` memory, the pointer variable itself is **_not_** automatically set to `NULL`. It still holds the address of the now-deallocated memory, becoming a **dangling pointer**. <mark style="background: #BBFABBA6;">After calling `free(ptr)`, the pointer `ptr` becomes a **dangling pointer** and should immediately be set to `NULL`</mark> to prevent accidental dereferencing.
+- The **order of evaluation for function arguments is unspecified** by the C standard. `func(a++, b--)`, `a++` might be evaluated before or after `b--`. This can lead to unexpected results if the arguments have side effects that depend on each other's evaluation order.
+- <mark style="background: #FFF3A3A6;">When an array name is used in most expressions (except `sizeof`, `&` operator, or as a string literal initializer), it "decays" into a pointer to its first element. This is why you often pass arrays to functions as pointers. This decay means that inside a function, `sizeof(array_parameter)` will give you the size of a pointer, _not_ the size of the original array.</mark>
+- When performing arithmetic operations,<mark style="background: #BBFABBA6;"> smaller integer types (like `char`, `short`) are often automatically "promoted" to `int` or `unsigned int` before the operation is performed.</mark> This can sometimes lead to unexpected results, especially with signed/unsigned mixing.
+- `switch` statement are merely entry points. I<mark style="background: #BBFABBA6;">f you don't explicitly use `break;` at the end of a `case` block, execution will "fall through" to the next `case` label.</mark> This is often a source of bugs but can also be used intentionally for certain logic patterns.
+-  `restrict` keyword ??????
+-  `printf("%p", arr);`      // prints address of `arr[0]`, `arr + 1` moves by `sizeof(int)`
+- `printf("%p", &arr); `    // also prints<mark style="background: #FFF3A3A6;"> base address, but of the whole array</mark>, `&arr + 1` moves by `sizeof(int) * nums`
+-  <mark style="background: #FFF3A3A6;">Modifications to the string literal is illegal. These are stored in read-only memory and and modification will cause runtime error.</mark>
+- The <mark style="background: #BBFABBA6;">order in which the arguments are evaluated in `printf` is unspecified </mark>in C. This means that the compiler can evaluate them in any order, which can lead to different results depending on the compiler and optimization settings.
+- Proper way to print output of `sizeof()` is to use `%zu` in `printf()`.
+- <mark style="background: #FFF3A3A6;">Proper way to print address of a pointer is to typecast it to `(void*)` and use `%p` in `printf()`.</mark>
+- The expression `x = x++;` can be misleading because it involves both an assignment and a post-increment operation. <mark style="background: #FFB8EBA6;">The assignment takes precedence, and the increment does not affect the value of `x` that is assigned</mark>. This is an example of undefined behavior in C, as <mark style="background: #FF5582A6;">modifying a variable and reading it in the same expression can lead to unpredictable results</mark>. However, in this specific case,<mark style="background: #FFF3A3A6;"> it results in `x` retaining its original value.</mark>
+- The `#` operator, when used before a macro argument in the replacement list, converts that argument into a string literal. For example, if you call `p(myVar)`, then `#n` will become `"myVar"`
+- `#define`<mark style="background: #FFF3A3A6;"> performs text substitutions and other directives before the actual compilation begins.</mark> Compiler checks for error in `#define` only if we use the macro, else no matter how the macro wrong is, it won’t be evaluated.
+- Printing `int` value as `float` will print 0.000
+- Printing `float` as `int` will print garbage.
+- <mark style="background: #FFF3A3A6;">By default, functions in C have **external linkage**.</mark> This means their names are visible across different source files (`.c` files) that are linked together to form a single executable.
+- The macro definition of INT_MIN is -INT_MAX - 1 (considering the signed integer)
+- When an integer overflow occurs for a `signed` type in C, the behavior is **undefined behavior**. However, on most systems using two's complement, <mark style="background: #FFF3A3A6;">the practical result of overflowing a positive value past its maximum is that it "wraps around" to the most negative value</mark>.
+- When `printf` encounters `\r`, it **moves the cursor back to the beginning of the current line**. It does _not_ clear the line or move to the next line. It just resets the printing position to column 0 of the current line.
+- The preprocessing operator **'#' is used to convert a string argument into a string constant**. `#define put(s) #s`
+-  In C, if a macro is not defined, the pre-processor assigns 0 to it by default.
+-  It’s okay to include library header files multiple times in a program. But actually the content of the header file is included only once. The way it’s achieved is due to usage of “#ifndef“, “#define” and “#endif”. That’s why it’s recommended to use these preprocessor macros even in user defined header files.
+-  After the pre-processing of a C program, a `.i` file is generated which is passed to the compiler for compilation.
+-  `#pragma once"` is used in a header file to avoid its inclusion more than once.
+-  An array whose size is specified as variable can’t be defined out any function. It can be defined only inside a function.
+-  In C/C++, if we initialize an array with fewer members, all remaining members are automatically initialized as 0
+-  Array name in C is implemented by a constant pointer. It is not possible to apply increment and decrement on constant types.
