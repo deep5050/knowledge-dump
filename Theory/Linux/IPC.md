@@ -278,3 +278,26 @@ RECEIVER_PROCESS:
 |TCP Sockets|Reliable communication over networks|
 |UDP Sockets|Fast, connectionless communication|
 |Unix Domain Sockets|Efficient local IPC on the same machine|
+
+
+
+
+
+
+
+Here’s a comprehensive table summarizing various Inter-Process Communication (IPC) mechanisms, along with their key features, advantages, and disadvantages:
+
+| **IPC Mechanism**        | **Description**                                      | **Advantages**                                      | **Disadvantages**                                   |
+|--------------------------|------------------------------------------------------|----------------------------------------------------|----------------------------------------------------|
+| **Pipes**                | A unidirectional communication channel between processes. | Simple to use; suitable for parent-child communication. | Unidirectional; limited to related processes.      |
+| **Named Pipes (FIFOs)**  | Similar to pipes but can be used between unrelated processes. | Allows communication between any processes; easier to manage. | Still unidirectional; requires proper naming.      |
+| **Message Queues**       | A queue that stores messages sent between processes. | Allows asynchronous communication; messages can be prioritized. | Overhead in managing queues; limited message size. |
+| **Shared Memory**        | A memory segment shared between processes for direct access. | Fastest IPC method; allows large data sharing.    | Requires synchronization mechanisms to avoid conflicts. |
+| **Semaphores**           | A signaling mechanism to control access to shared resources. | Efficient for managing resource access; prevents race conditions. | Complexity in implementation; can lead to deadlocks. |
+| **Sockets**              | Endpoints for communication, often used in networked applications. | Flexible; can be used for local and remote communication. | More complex setup; higher overhead compared to other IPC methods. |
+| **Signals**              | Notifications sent to processes to indicate events. | Lightweight; suitable for simple notifications.   | Limited data transfer; can be complex to handle.   |
+| **Memory-Mapped Files**  | Maps files into memory for shared access between processes. | Allows sharing of large data sets; easy to use.   | Requires synchronization; file system dependency.   |
+| **DBus**                 | A message bus system for communication between applications. | High-level abstraction; supports complex data types. | Overhead; may be overkill for simple communication. |
+| **Remote Procedure Calls (RPC)** | Allows a program to execute code on another address space. | Simplifies network communication; abstracts complexity. | Can be slower due to network latency; requires more setup. |
+
+This table provides an overview of various IPC mechanisms, highlighting their characteristics, benefits, and limitations, which can help in selecting the appropriate method for specific inter-process communication needs.
