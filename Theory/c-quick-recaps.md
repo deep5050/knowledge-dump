@@ -27,3 +27,11 @@
 - The macro definition of INT_MIN is -INT_MAX - 1 (considering the signed integer)
 - When an integer overflow occurs for a `signed` type in C, the behavior is **undefined behavior**. However, on most systems using two's complement, <mark style="background: #FFF3A3A6;">the practical result of overflowing a positive value past its maximum is that it "wraps around" to the most negative value</mark>.
 - When `printf` encounters `\r`, it **moves the cursor back to the beginning of the current line**. It does _not_ clear the line or move to the next line. It just resets the printing position to column 0 of the current line.
+- The preprocessing operator **'#' is used to convert a string argument into a string constant**. `#define put(s) #s`
+-  In C, if a macro is not defined, the pre-processor assigns 0 to it by default.
+-  It’s okay to include library header files multiple times in a program. But actually the content of the header file is included only once. The way it’s achieved is due to usage of “#ifndef“, “#define” and “#endif”. That’s why it’s recommended to use these preprocessor macros even in user defined header files.
+-  After the pre-processing of a C program, a `.i` file is generated which is passed to the compiler for compilation.
+-  `#pragma once"` is used in a header file to avoid its inclusion more than once.
+-  An array whose size is specified as variable can’t be defined out any function. It can be defined only inside a function.
+-  In C/C++, if we initialize an array with fewer members, all remaining members are automatically initialized as 0
+-  Array name in C is implemented by a constant pointer. It is not possible to apply increment and decrement on constant types.
