@@ -1,3 +1,5 @@
+https://thelinuxcode.com/understanding-fork-in-c-a-comprehensive-guide/
+
 ## Fork()
 The `fork()` system call is used to create a new process by duplicating the calling process. The new process created is called the child process, and the process that calls `fork()` is referred to as the parent process. Here’s how `fork()` works in detail:
 
