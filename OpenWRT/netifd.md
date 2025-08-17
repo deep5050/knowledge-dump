@@ -1,7 +1,7 @@
 ## 🛠️ Overview of netifd
 
 ### 📜 What is netifd?
-**netifd** is the network interface management daemon used in OpenWrt to handle the configuration and management of network interfaces. It is responsible for bringing interfaces up and down, managing their states, and applying configurations defined in the system.
+**netifd** is the **network interface management daemon** used in OpenWrt to handle the configuration and management of network interfaces. It is responsible for bringing interfaces up and down, managing their states, and applying configurations defined in the system.
 
 ### 🏗️ Architecture
 - **Daemon Process**: netifd runs as a background process, continuously monitoring and managing network interfaces based on configuration changes.
@@ -10,7 +10,7 @@
 
 ### 🔑 Key Features
 - **Interface Management**: netifd manages various types of network interfaces, including Ethernet, Wi-Fi, VLANs, and bridges.
-- **Dynamic Configuration**: It can dynamically apply configurations without requiring a full system restart, allowing for seamless network changes.
+- **Dynamic Configuration**: It can dynamically apply configurations** without requiring a full system restart**, allowing for seamless network changes.
 - **Hotplug Support**: netifd supports hotplug events, enabling it to react to hardware changes, such as plugging in a new network interface.
 - **State Management**: It maintains the state of network interfaces, allowing for monitoring and reporting of their status.
 
