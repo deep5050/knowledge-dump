@@ -1,3 +1,6 @@
+
+![04fig01](https://github.com/user-attachments/assets/2fdb9f4a-8a41-40ed-ab06-82b95f13cd46)
+
 ## 🛠️`sk_buff`
 
 In the Linux kernel, particularly in the networking subsystem, **`sk_buff`** (socket buffer) is a crucial data structure used to manage network packets.
@@ -36,6 +39,14 @@ struct sk_buff {
 - **`data`, `tail`, and `end`**: These pointers manage the actual data within the buffer, allowing for efficient data manipulation.
 - **`len` and `data_len`**: These fields store the total length of the packet and the length of the data portion, respectively.
 - **`truesize`**: This indicates the actual size of the memory allocated for the `sk_buff`, which may be larger than the data length due to overhead.
+
+## Data Fields
+Data Pointer: This points to the beginning of the data in the buffer. It allows the kernel to access the packet's payload.
+Length: This indicates the total length of the data in the buffer.
+Protocol: This field specifies the protocol used (e.g., IP, ARP) for the packet.
+Transport Header: A pointer to the transport layer header (e.g., TCP, UDP) within the buffer.
+Network Header: A pointer to the network layer header (e.g., IP) within the buffer.
+Device Pointer: This points to the network device associated with the packet, helping in routing and processing.
 
 ## 📝 Sample Code Snippet to Handle `sk_buff`
 
@@ -110,6 +121,43 @@ MODULE_DESCRIPTION("Sample module to handle sk_buff");
 - **Setting Protocol and Device**: The protocol is set using `htons` to convert the protocol number to network byte order, and the device is assigned to the `sk_buff`.
 - **Transmitting the Packet**: The `dev_queue_xmit` function is called to transmit the packet. This function handles the actual sending of the packet through the network stack.
 - **Cleanup**: The `dev_put` function releases the reference to the network device, and the module exit function is defined to clean up when the module is removed.
+
+## Transmit Path Call Flow:
+
+1. Application: write(socket, data, len)
+2. TCP Layer: tcp_sendmsg() → adds TCP header 
+3. IP Layer: ip_queue_xmit() → adds IP header
+4. Routing: ip_finish_output() → determines output device
+5. Ethernet Layer: eth_header() → adds Ethernet header
+6. Device Layer: dev_queue_xmit() → calls driver  
+7. NIC Driver: netdev->ndo_start_xmit() → maps complete packet to DMA
+8. Hardware: DMA to NIC → transmit on wire
+
+Key Files in Linux Kernel:
+- net/ipv4/tcp_output.c (TCP header)  
+- net/ipv4/ip_output.c (IP header)
+- net/ethernet/eth.c (Ethernet header) ← CORRECTED LOCATION
+- net/core/dev.c (device layer)
+- drivers/net/ethernet/*/driver.c (DMA mapping only)
+
+Receive Path:
+- Driver receives frame from hardware
+- skb->protocol = eth_type_trans(skb, dev); // Process existing header
+- Pass to upper layers
+
+## Key concepts
+
+- Buffer Design: head ← [headroom] ← data ← [actual data] ← tail ← [tailroom] ← end
+- Length Calculation: len = tail - data (NOT end - head)
+- Efficiency: Headroom/tailroom enable zero-copy header operations
+- Flexibility: Same buffer travels through entire network stack
+- Performance: Eliminates costly memory allocations and copies
+- Zero-copy operations: Headers can be added/removed without copying data (Fantastic idea!)
+- <img width="1488" height="800" alt="1748229689334" src="https://github.com/user-attachments/assets/3a028ee3-8d78-46be-a5f9-58f7cd772951" />
+
+  <img width="2074" height="861" alt="1748228856638" src="https://github.com/user-attachments/assets/273c4606-c601-4763-83e2-7c0a50f1f7a2" />
+
+<img width="2066" height="720" alt="1748228881861" src="https://github.com/user-attachments/assets/8480a270-c1c0-4c12-b89e-d10d79244e73" />
 
 ### ⚠️ Note
 
