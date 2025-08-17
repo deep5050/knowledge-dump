@@ -12,6 +12,8 @@ Given a linked list, determine if it has a cycle in it. If a cycle exists, retur
 - Input: `head = [1]`
 - Output: `-1` (there is no cycle)
 
+<img width="1035" height="698" alt="image" src="https://github.com/user-attachments/assets/15c7cf0e-4b85-4f88-8116-4debf6466f94" />
+
 ### Constraints:
 - The number of nodes in the linked list is in the range [0, 10^4].
 - The values of the nodes are in the range of [-10^5, 10^5].
@@ -21,7 +23,6 @@ Given a linked list, determine if it has a cycle in it. If a cycle exists, retur
 Here is a C++ implementation to solve the problem using Floyd's Tortoise and Hare algorithm, with the added functionality to return the position of the cycle's starting node:
 
 ```cpp
-// C++ program to return first node of loop.
 #include <bits/stdc++.h>
 using namespace std;
 
