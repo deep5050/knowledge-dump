@@ -1,3 +1,14 @@
+## Problem Statement: LeetCode 14 - Longest Common Prefix
+Write a function to find the longest common prefix string amongst an array of strings. If there is no common prefix, return an empty string "".
+
+Example:
+```
+Input: strs = ["flower","flow","flight"]
+Output: "fl"
+Input: strs = ["dog","racecar","car"]
+Output: ""
+```
+
 To solve the "Longest Common Prefix" problem in an array of strings, you can use a straightforward approach that compares characters of the strings one by one. The goal is to find the longest prefix that is common to all strings in the array.
 
 ## 📝 C++ Solution
@@ -47,7 +58,7 @@ int main() {
 4. **Return Result**: After checking all strings, return the longest common prefix.
 
 ### 📊 Complexity:
-- **Time Complexity**: O(n * m), where n is the number of strings and m is the length of the longest string. In the worst case, you may need to compare each character of each string.
+- **Time Complexity**: **O(n * m)**, where n is the number of strings and m is the length of the longest string. In the worst case, you may need to compare each character of each string.
 - **Space Complexity**: O(1), as we are using a constant amount of extra space for the prefix variable.
 
 This solution efficiently finds the longest common prefix among an array of strings by progressively shortening the prefix until it matches all strings.
