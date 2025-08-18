@@ -9,15 +9,15 @@ Memory allocation in the kernel is a critical function that ensures efficient us
 
    <img width="559" height="364" alt="image" src="https://github.com/user-attachments/assets/f5fa52e1-28fe-4390-891d-d92cd8b02466" />
 
-   - The kernel uses a buddy system for managing free memory. It divides memory into blocks of sizes that are powers of two. When a request for memory is made, the system finds the smallest block that can satisfy the request. If a block is too large, it is split into two smaller blocks (buddies).
-   - This system helps in reducing fragmentation and makes it easier to merge free blocks when they are released.
+   - The kernel uses a buddy system for managing free memory. It divides memory into blocks of sizes that are powers of two. When a request for memory is made, the system **finds** the smallest block that can satisfy the request. If a block is too large, it is split into two smaller blocks (buddies).
+   - This system helps in **reducing fragmentation** and makes it easier to merge free blocks when they are released.
 
 2. **Slab Allocator**:
    
    <img width="604" height="422" alt="image" src="https://github.com/user-attachments/assets/8cabc6ee-a6eb-4c1e-a855-ff9eb69c2e8e" />
 
-   - The slab allocator is used for allocating memory for objects of the same size. It maintains caches of commonly used objects, which reduces the overhead of frequent allocations and deallocations.
-   - Each cache contains slabs, which are blocks of memory that can be allocated to objects. This method is efficient for kernel objects that are frequently created and destroyed.
+   - The slab allocator is used for **allocating memory for objects of the same size**. It maintains caches of **commonly used objects**, which reduces the overhead of frequent allocations and deallocations.
+   - Each cache contains slabs, which are blocks of memory that can be allocated to objects. This method is efficient **for kernel objects that are frequently created and destroyed**.
 
 3. **Page Allocation**:
    - The kernel manages memory in pages, typically 4 KB in size. When a process requests memory, the kernel allocates one or more pages.
