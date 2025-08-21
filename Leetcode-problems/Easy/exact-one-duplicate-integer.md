@@ -30,3 +30,6 @@ int findDuplicate(vector<int> &arr)
 ```
 ## Complexity
 Time Complexity id O(n) 
+
+## NOTE: !!!!!
+This solution wont work on input array like `{3,3,3,3,}` !! to sole this kind of problem reger to : leetcode 287
