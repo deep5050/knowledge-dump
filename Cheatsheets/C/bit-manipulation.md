@@ -18,3 +18,8 @@
 - **Shifting operations** can be used for quick multiplication or division by powers of two.
 - **Setting, clearing, toggling, and checking bits** are essential techniques for managing flags and binary states in applications.
 
+> NOTE:
+
+Left Shift: Increases the bit count because it **adds zeros to the right**, effectively **multiplying the number.**
+
+Right Shift: ** May decrease the bit count** as bits are shifted out, effectively **dividing the number**
