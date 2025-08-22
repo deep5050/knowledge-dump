@@ -30,4 +30,5 @@ Working with embedded systems lately and realized many developers don't fully un
 
 This modular design is why Linux dominates embedded - ultimate flexibility with proven reliability.
 
-<img width="800" height="614" alt="image" src="https://github.com/user-attachments/assets/3e4247d2-f174-41e4-abbf-4c88414974f8" />
+
+<img width="1999" height="1536" alt="image" src="https://github.com/user-attachments/assets/52fdc90d-1247-47b7-add7-ccd3f2615dba" />
