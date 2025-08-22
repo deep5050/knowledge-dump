@@ -55,4 +55,5 @@ Performance-optimized versions of common operations
 Complex build systems with multiple translation units
 Have you encountered similar linking mysteries? Share your war stories! 👇
 ```
-<img width="800" height="604" alt="image" src="https://github.com/user-attachments/assets/56c6dbbd-3bc6-469b-85ba-b12099b33732" />
+
+<img width="2017" height="1524" alt="image" src="https://github.com/user-attachments/assets/59a25d50-3406-4060-bfe4-3717012880f4" />
