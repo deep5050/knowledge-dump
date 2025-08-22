@@ -40,4 +40,5 @@ Bottom line: 𝐓𝐡𝐞 𝐛𝐨𝐨𝐭𝐥𝐨𝐚𝐝𝐞𝐫 𝐠𝐞𝐭�
 
 Understanding `rootfs` architecture = understanding how to build exactly the Linux system your project needs.
 
-<img width="800" height="395" alt="image" src="https://github.com/user-attachments/assets/3ab691c5-d0df-4a6a-b095-fd1b1b89f2ec" />
+<img width="2048" height="1013" alt="image" src="https://github.com/user-attachments/assets/25d1b9d3-8f91-49f0-98d6-ce4baec1904a" />
+
