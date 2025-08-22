@@ -130,3 +130,15 @@ MODULE_DESCRIPTION("A Simple Network Device Driver");
 
 
 ```
+----------------------------------------------------------
+### operations on an interface
+
+| Feature                     | `struct net_device_ops`                     | `struct ethtool_ops`                        | `struct ifreq`                             |
+|-----------------------------|---------------------------------------------|---------------------------------------------|--------------------------------------------|
+| **Purpose**                 | Defines operations for network devices.     | Defines operations for Ethernet device management and diagnostics. | Used for configuring network interfaces and retrieving interface parameters. |
+| **Common Functions**        | - Open, stop, start, and change settings of network devices. <br> - Packet transmission and reception. | - Get/set link status, statistics, and other device-specific settings. | - Set/get interface flags, address, MTU, and other parameters. |
+| **Usage Context**           | Used in the context of network device drivers to manage the lifecycle and operations of network interfaces. | Used for managing and querying Ethernet device features and statistics, typically through the `ethtool` utility. | Used in system calls like `ioctl` to configure network interfaces. |
+| **Key Functions**           | - `ndo_open`: Open the device. <br> - `ndo_stop`: Stop the device. <br> - `ndo_start_xmit`: Transmit packets. | - `get_drvinfo`: Get driver information. <br> - `get_link`: Get link status. <br> - `set_settings`: Set device settings. | - `ifr_name`: Interface name. <br> - `ifr_flags`: Interface flags. <br> - `ifr_addr`: Interface address. |
+| **Integration**             | Integrated into the `net_device` structure, which represents a network interface. | Integrated into the `net_device` structure but specifically for Ethernet devices. | Used in conjunction with system calls to manipulate network interfaces. |
+| **Example Usage**           | Used in a network driver to implement how packets are sent and received. | Used to provide additional features like link speed, duplex settings, and statistics. | Used in applications to configure network settings, such as bringing an interface up or down. |
+
