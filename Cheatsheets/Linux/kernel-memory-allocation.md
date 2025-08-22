@@ -1,10 +1,6 @@
-## 🖥️ How the Kernel Allocates Memory
+## How the Kernel Allocates Memory
 
-Memory allocation in the kernel is a critical function that ensures efficient use of system resources. The kernel manages memory through various mechanisms and structures to allocate, track, and free memory as needed.
-
-### 🛠️ Memory Allocation Mechanisms
-
-1. **Buddy System**:
+### **Buddy System**:
 
 
    <img width="559" height="364" alt="image" src="https://github.com/user-attachments/assets/f5fa52e1-28fe-4390-891d-d92cd8b02466" />
@@ -12,16 +8,26 @@ Memory allocation in the kernel is a critical function that ensures efficient us
    - The kernel uses a buddy system for managing free memory. It divides memory into blocks of sizes that are powers of two. When a request for memory is made, the system **finds** the smallest block that can satisfy the request. If a block is too large, it is split into two smaller blocks (buddies).
    - This system helps in **reducing fragmentation** and makes it easier to merge free blocks when they are released.
 
-2. **Slab Allocator**:
+### **Slab Allocator**:
    
    <img width="604" height="422" alt="image" src="https://github.com/user-attachments/assets/8cabc6ee-a6eb-4c1e-a855-ff9eb69c2e8e" />
 
    - The slab allocator is used for **allocating memory for objects of the same size**. It maintains caches of **commonly used objects**, which reduces the overhead of frequent allocations and deallocations.
    - Each cache contains slabs, which are blocks of memory that can be allocated to objects. This method is efficient **for kernel objects that are frequently created and destroyed**.
 
-3. **Page Allocation**:
-   - The kernel manages memory in pages, typically 4 KB in size. When a process requests memory, the kernel allocates one or more pages.
-   - The kernel keeps track of free and used pages using data structures like page tables and the page frame database.
+### **SLUB Allocator**
+The SLUB (Simple List Unordered Blocks) allocator is a **more modern replacement for the slab allocator**. It aims to reduce complexity and improve performance by using a simpler data structure. SLUB provides better cache performance and is designed to minimize memory fragmentation.
+
+### **Page Allocator**
+The page allocator is responsible for managing **memory at the page level** (**typically 4 KB** on x86 architectures). It handles requests for larger memory blocks by allocating whole pages and can also manage free pages efficiently. The page allocator works closely with the buddy system to manage free memory pages.
+
+### **Memory Pools**
+Memory pools are used for specific types of memory allocations that **require a fixed size**. This technique allows for **pre-allocated memory blocks that can be quickly assigned** and released, reducing the overhead of dynamic allocation.
+
+### **Contiguous Memory Allocator**
+This allocator is used for situations where contiguous physical memory is required, such as for **DMA (Direct Memory Access)** operations. It ensures that the allocated memory is physically contiguous, which is crucial for certain hardware operations.
+
+--------------------------------------------------------------------------------------------------
 
 ### 📊 Memory Allocation Process
 
