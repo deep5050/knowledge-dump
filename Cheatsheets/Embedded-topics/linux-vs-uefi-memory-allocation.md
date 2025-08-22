@@ -25,5 +25,6 @@ OpenSSL expects standard C library functions like `malloc()`, `realloc()`, and `
 
 This is systems programming at its finest - creating abstractions that make complex integrations "just work"!
 
-<img width="800" height="622" alt="image" src="https://github.com/user-attachments/assets/95d19d10-bf7e-4035-b8f0-3fd7a948721a" />
+<img width="1659" height="1290" alt="image" src="https://github.com/user-attachments/assets/0da9b2d9-9cf0-47e4-b6c8-d6473895b288" />
+
 
