@@ -36,4 +36,5 @@ Why this matters: You can have a Buildroot-generated initramfs successfully moun
 
 This modular design is Linux genius - minimal bootstrap + any full OS = infinite flexibility.
 
-<img width="800" height="532" alt="image" src="https://github.com/user-attachments/assets/b0d8a0fd-ced8-4c7f-89e3-b0408d0e74e8" />
+<img width="2048" height="1362" alt="image" src="https://github.com/user-attachments/assets/6d5a3818-2f4c-4f6c-ae40-2cc0edc0d6f6" />
+
