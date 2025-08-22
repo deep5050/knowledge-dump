@@ -1,6 +1,6 @@
 ## Problem Description: LeetCode 122 - Best Time to Buy and Sell Stock II
 
-You are given an array where the `i-th` element is the price of a given stock on the `i-th` day. You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock. However, you can make as many transactions as you like (i.e., buy one and sell one share of the stock multiple times).
+You are given an array where the `i-th` element is the price of a given stock on the `i-th` day. You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock. However, you can make as many transactions as you like (i.e., **buy one and sell one share of the stock multiple times**).
 
 ### Example:
 - Input: `prices = [7, 1, 5, 3, 6, 4]`
