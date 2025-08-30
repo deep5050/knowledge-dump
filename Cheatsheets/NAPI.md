@@ -95,9 +95,17 @@ The budget parameter is crucial to NAPI's operation:
 
 ### NAPI Processing Steps
 - **Initial Interrupt:** When packets arrive, the NIC generates an interrupt
-- **Interrupt Handler:** The driver's interrupt handler: 1. Acknowledges the interrupt 2. Disables further interrupts from the device 3. Calls napi_schedule() to schedule the NAPI poll function
-- **NAPI Poll:** The kernel's softirq mechanism calls the driver's poll function, which: 1. Processes completed TX packets 2. Processes RX packets up to the budget limit 3. Returns the number of packets processed
-- **Completion Decision:**  1. If work_done < budget: All packets have been processed, so call napi_complete_done() and re-enable interrupts 2. If work_done == budget: There may be more packets to process, so NAPI remains scheduled and interrupts remain disabled
+- **Interrupt Handler:** The driver's interrupt handler:
+     1. Acknowledges the interrupt
+     2. Disables further interrupts from the device
+     3.  Calls `napi_schedule()` to schedule the NAPI poll function
+- **NAPI Poll:** The kernel's softirq mechanism calls the driver's poll function, which:
+    1. Processes completed TX packets
+    2.  Processes RX packets up to the budget limit
+    3. Returns the number of packets processed
+- **Completion Decision:**
+    1. If work_done < budget: All packets have been processed, so call `napi_complete_done()` and re-enable interrupts
+    2. If work_done == budget: There may be more packets to process, so NAPI remains scheduled and interrupts remain disabled
 
 ### Registration
 
