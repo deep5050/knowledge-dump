@@ -358,9 +358,13 @@ Types of VLANs:
 
 3. **802.1Q VLAN (Tagged VLAN):** The IEEE 802.1Q standard introduces VLAN tagging, where <mark style="background: #BBFABBA6;">a VLAN ID is added to the Ethernet frame's header</mark>. This allows switches to identify which VLAN the frame belongs to, enabling devices on different switches to be part of the same VLAN.
 
+> NOTE: Tag protocol identifier (TPID)
+> A 16-bit field set to a value of 0x8100[b] in order to identify the frame as an IEEE 802.1Q-tagged frame. This field is located at the same position as the EtherType field in untagged
+> frames, and is thus used to distinguish the frame from untagged frames.
+> 
 
 ### Advantages
-#vlan
+
 VLANs (Virtual Local Area Networks) offer numerous advantages and benefits that make them an essential tool for network administrators. Some of the key advantages of VLANs include:
 
 1. **Network Segmentation:** VLANs allow the logical segmentation of a single physical network into multiple virtual networks. This helps isolate traffic and reduces the broadcast domain size, leading to better network performance and management.
