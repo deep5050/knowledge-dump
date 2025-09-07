@@ -1,4 +1,3 @@
-<img width="6000" height="3375" alt="image" src="https://github.com/user-attachments/assets/1ef92690-5a80-4a02-be3d-658b421642ab" />
 
 <img width="840" height="564" alt="image" src="https://github.com/user-attachments/assets/9b46ccf4-c3ec-4aa9-9a10-561063cd97cd" />
 
@@ -76,6 +75,76 @@ TCP is used in various applications, including:
 - **Email**: Protocols like SMTP, POP3, and IMAP use TCP to ensure emails are sent and received correctly.
 - **File Transfer**: FTP and SFTP protocols utilize TCP for reliable file transfers.
 
----
+# How can a TCP window size be allowed to be larger than the maximum size of an ethernet packet?
 
-TCP is a fundamental protocol that plays a critical role in ensuring reliable communication over the internet. Its features, such as connection-oriented communication, error detection, and flow control, make it suitable for a wide range of applications where data integrity is paramount.
+## **Key Concept: Segmentation vs Window Size**
+
+**TCP Window Size** and **Ethernet Frame Size** operate at different layers and serve different purposes:
+
+- **TCP Window Size**: A logical flow control mechanism (Layer 4)
+- **Ethernet Frame Size**: A physical transmission constraint (Layer 2)
+
+## **How It Works**
+
+**Segmentation Process:**
+- TCP window can be 64KB or larger (up to 1GB with window scaling)
+- Each TCP segment must fit within the Maximum Transmission Unit (MTU)
+- Standard Ethernet MTU is 1500 bytes
+- TCP automatically fragments large windows into multiple smaller segments
+
+**Example:**
+- TCP window size: 32,768 bytes (32KB)
+- Ethernet MTU: 1500 bytes
+- TCP payload per segment: ~1460 bytes (1500 - 20 IP header - 20 TCP header)
+- Result: 32KB window = approximately 22 separate Ethernet frames
+
+## **Window Size vs Packet Size**
+
+**Window Size Purpose:**
+- Controls how much unacknowledged data can be "in flight"
+- Manages receiver buffer capacity
+- Prevents sender from overwhelming receiver
+
+**Packet Size Purpose:**
+- Physical constraint of transmission medium
+- Ensures frames can traverse network infrastructure
+- Prevents fragmentation at IP layer
+
+## **Practical Implementation**
+
+**Sender Behavior:**
+1. Receiver advertises window size (e.g., 64KB)
+2. Sender can transmit up to 64KB before requiring ACK
+3. TCP stack automatically segments this into MTU-sized packets
+4. Each packet sent as separate Ethernet frame
+5. Receiver ACKs cumulative bytes received
+
+**Network Transmission:**
+- Multiple small Ethernet frames carry portions of the large TCP window
+- Each frame travels independently through network
+- TCP reassembles segments at destination
+- Acknowledgment covers all successfully received data
+
+## **Window Scaling**
+
+**Modern Enhancement:**
+- Original TCP window limited to 65,535 bytes (16-bit field)
+- Window scaling option allows windows up to 1GB
+- Still segmented into MTU-sized packets for transmission
+- Essential for high-bandwidth, high-latency networks
+
+## **Benefits of Large Windows**
+
+**Performance Advantages:**
+- Keeps network pipe full on high-latency connections
+- Reduces impact of acknowledgment delays
+- Improves throughput on fast networks
+- More efficient for bulk data transfers
+
+**Example Scenario:**
+- Satellite connection: 500ms round-trip time
+- 10 Mbps bandwidth
+- Without large windows: frequent transmission pauses waiting for ACKs
+- With large windows: continuous transmission until window exhausted
+
+The TCP window size being larger than Ethernet frame size is not only normal but necessary for efficient network utilization. The protocol stack handles the complexity of segmentation and reassembly transparently.
