@@ -1,3 +1,4 @@
+<img width="648" height="648" alt="image" src="https://github.com/user-attachments/assets/3e67a338-2e3e-4825-99ee-c719828ff959" />
 
 # WLAN (Wireless Local Area Network)
 
