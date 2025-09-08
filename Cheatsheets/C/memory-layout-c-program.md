@@ -1,3 +1,6 @@
+<img width="606" height="463" alt="image" src="https://github.com/user-attachments/assets/36c14ee4-5587-4398-925c-bfaf6c6637c1" />
+
+
 ##  **Memory Layout of a C Program**:
 
 | **Segment**               | **Purpose**                                                                 | **Contents**                                                                 | **Growth Direction** | **Access Type**     |
