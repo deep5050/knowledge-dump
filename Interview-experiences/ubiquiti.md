@@ -1,0 +1,32 @@
+- what are the breakpoints aviable in GDB ?
+- Let say a program is running and consuming a lot of memory, first of all how do you come to know that this is consuming a lot ? what are the tools you will use in this situation?
+- What if you are not allowed to stop the program, and you need to debug at runtime ?
+- what is strace tool ? when do you need to use it ?
+- what is valgrind? how does it actually works ? a basic overview ?
+- Basic overview of threads and process
+- How do threads share resources / memory?
+- Let say more than one thread is reading a value, how do I ensure that all the reads and does as intended ? or may be correct order ?
+- What is the kernel structure which holds threads and process information ?
+- Basic overview of mutex, semaphores
+- What are the IPC mechanisms ?
+- basic of socket programming? what is `select` and `epool` in this context ?
+- What are the network debugging tools you used ?
+- You said, you worked with IPSEC HW accel., how did you inspect the packet at through the kernel stack ? what are the tools you used to trace the packets ?
+- What is your biggest achievements / problem and how did you overcome that ?
+- what is `clone` , `exec` `fork` ?
+- How can you pass your own libc implementaion to the program ?
+- what is `LD_PRELOAD`?
+- If the libc and your implemention has the same function name, how will you force your program to use the custom APIs ?
+- What was your role at the SONiC project you mentioned?
+- What are the data strucres used in routing devices primarily ?
+- What are the scenarios, when you use hashmap, graph, tree as a data structure as you mentioned in previous answer?
+- What is the `static` keyword in c ? what are the usecases ?
+- What is a `static void func()` for ?
+- What is a inline function?
+- What are the threading libraries you used?
+- How did you dump all the routing chains ?
+- Let say  an ICMP packet want to reach 8.8.8.8 . what is the typical flow ? step by steps?
+- What will be the MAC address of the packet when it tries to reach the router ?
+- How the device will know the MAC of the router ?
+- 
+  
