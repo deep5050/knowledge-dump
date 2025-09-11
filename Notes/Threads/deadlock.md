@@ -190,3 +190,134 @@ Here’s why:
 ---
 
 Do you want me to show you a **deadlock-free version of the banking transfer code** with proper lock ordering, so you see the difference in action?
+
+## Tricky concepts
+### Locking a mutex more than once
+
+Nice catch 👌 — this is a very important subtlety.
+
+What happens if you lock the **same mutex more than once** depends on the type of mutex:
+
+---
+
+### 1. **Normal (default) `pthread_mutex_t`**
+
+* If a thread **calls `pthread_mutex_lock()` twice on the same mutex without unlocking**,
+  → it will **block itself** and wait forever.
+* This is called **self-deadlock**.
+* Example:
+
+  ```c
+  pthread_mutex_lock(&lock);
+  pthread_mutex_lock(&lock); // ❌ self-deadlock here
+  ```
+* The second call will wait, but since the same thread already holds the lock, nobody can release it → stuck.
+
+---
+
+### 2. **Recursive Mutex (`PTHREAD_MUTEX_RECURSIVE`)**
+
+* This special type of mutex allows the same thread to **lock multiple times**.
+* Internally, it keeps a **counter** of how many times it has been locked by the same thread.
+* You must unlock the same number of times before another thread can acquire it.
+* Example:
+
+  ```c
+  pthread_mutex_t lock;
+  pthread_mutexattr_t attr;
+
+  pthread_mutexattr_init(&attr);
+  pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&lock, &attr);
+
+  pthread_mutex_lock(&lock);
+  pthread_mutex_lock(&lock); // ✅ works
+  pthread_mutex_unlock(&lock);
+  pthread_mutex_unlock(&lock); // Only now released for others
+  ```
+* Useful when functions call each other and both try to lock the same resource.
+
+---
+
+### 3. **Error-checking Mutex (`PTHREAD_MUTEX_ERRORCHECK`)**
+
+* If the same thread locks the mutex again, it returns an **error (`EDEADLK`)** instead of blocking.
+* Safer for debugging, but slower.
+
+---
+
+### Summary
+
+* **Normal mutex** → deadlocks if same thread locks twice.
+* **Recursive mutex** → allows multiple locks, must unlock same number of times.
+* **Error-checking mutex** → detects and reports mistake.
+
+---
+
+👉 In real-world code, you usually stick with **normal mutexes** (fastest), unless recursion or re-entrant locking is unavoidable.
+
+Great follow-up 👌 — this is another subtle corner case.
+
+---
+
+### 🔓 Unlocking a mutex more than once
+
+It depends on whether the **same thread** or a **different thread** does it, and on the mutex type.
+
+---
+
+#### 1. **Normal (default) mutex**
+
+* If a thread tries to **unlock a mutex it does not own**, the result is **undefined behavior**.
+
+  * On Linux/glibc with pthreads, it usually returns an error (`EPERM`), but in C standard POSIX terms it’s not guaranteed.
+* If the same thread tries to **unlock twice in a row**:
+
+  * The first `unlock` succeeds (mutex is released).
+  * The second `unlock` is an error (`EPERM`), because the thread no longer owns the lock.
+
+Example:
+
+```c
+pthread_mutex_lock(&lock);
+pthread_mutex_unlock(&lock);
+pthread_mutex_unlock(&lock); // ❌ error: not owner anymore
+```
+
+---
+
+#### 2. **Recursive mutex**
+
+* A recursive mutex has a **counter**.
+* If you locked it 2 times, you must unlock it 2 times.
+* If you unlock more times than you locked, you hit an error (again `EPERM`).
+
+---
+
+#### 3. **Error-checking mutex**
+
+* Designed to catch programmer mistakes.
+* Unlocking when you don’t own it → returns `EPERM` immediately.
+* Safer than silent undefined behavior.
+
+---
+
+### ⚡ Why double-unlocking is dangerous
+
+* Imagine Thread A unlocks a mutex it doesn’t hold → Thread B may enter a critical section it **shouldn’t**, causing **race conditions** or **data corruption**.
+* That’s why POSIX made it undefined/error.
+
+---
+
+✅ So:
+
+* **Double unlock = error** (usually `EPERM`).
+* It does **not** block like double-locking does.
+* Correct usage rule → "Every `lock` must have exactly one matching `unlock`."
+
+---
+
+Would you like me to show you a **short C program** that demonstrates both cases — double-lock (self-deadlock) vs double-unlock (`EPERM`)?
+
+
+
