@@ -151,3 +151,5 @@ iptables -t raw -A PREROUTING -p tcp --dport 80 -j NOTRACK
 5. **SECURITY**: Apply security policies
 
 Understanding these tables and their processing order is crucial for creating effective and efficient firewall rules in Linux systems.
+
+<img width="1116" height="586" alt="image" src="https://github.com/user-attachments/assets/1be24d50-fa58-4622-af43-e4df155c769d" />
