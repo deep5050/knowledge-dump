@@ -23,3 +23,57 @@
 Left Shift: Increases the bit count because it **adds zeros to the right**, effectively **multiplying the number.**
 
 Right Shift: ** May decrease the bit count** as bits are shifted out, effectively **dividing the number**
+
+
+```
+
+
+Set a bit          : x |= (1U << n)               // OR‑in the mask
+Clear a bit        : x &= ~(1U << n)              // AND‑out the inverted mask
+Toggle a bit       : x ^= (1U << n)               // XOR flips bits
+Check a bit        : (x & (1U << n)) != 0         // AND gives mask, non‑zero = set
+
+Isolate lowest set bit : x & -x   (or x & (~x + 1))
+Clear lowest set bit   : x &= x - 1
+
+Count set bits (Kernighan):
+    cnt = 0;
+    while (v) { v &= v - 1; cnt++; }
+
+Parity (odd/even # of 1s):
+    x ^= x >> 16;
+    x ^= x >> 8;
+    x ^= x >> 4;
+    x &= 0xF;
+    parity = (0x6996 >> x) & 1;
+
+Swap two ints without temp:
+    a ^= b; b ^= a; a ^= b;
+
+Reverse bits (32‑bit) – mask‑shift‑or pattern:
+    rev = ((x>>1)&0x55555555) | ((x&0x55555555)<<1);
+    rev = ((rev>>2)&0x33333333) | ((rev&0x33333333)<<2);
+    rev = ((rev>>4)&0x0F0F0F0F) | ((rev&0x0F0F0F0F)<<4);
+    rev = ((rev>>8)&0x00FF00FF) | ((rev&0x00FF00FF)<<8);
+    rev = (rev>>16) | (rev<<16);
+
+Power of two test : (x != 0) && ((x & (x - 1)) == 0)
+
+Round up to next power of two:
+    x--;
+    x |= x >> 1;
+    x |= x >> 2;
+    x |= x >> 4;
+    x |= x >> 8;
+    x |= x >> 16;
+    x++;
+
+Flip count between a and b : popcount(a ^ b)
+
+Get sign mask (0 or -1) : mask = x >> (sizeof(int)*8 - 1)
+
+Absolute value without branch:
+    mask = x >> (sizeof(int)*8 - 1);
+    abs  = (x + mask) ^ mask;
+
+```
