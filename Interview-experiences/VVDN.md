@@ -1,0 +1,6 @@
+- memory layout of c programming
+- IPC AND THREADS
+- How kernel allocates memory
+- structure of netdevice
+- structure of SKB
+- 
