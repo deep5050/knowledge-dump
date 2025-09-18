@@ -66,3 +66,157 @@ Both lines are **open‑drain** (or open‑collector) and require pull‑up resi
 6. **STOP** → SDA released high while SCL high.  
 
 ---
+## Minimal I²C Read/Write Example (Linux userspace)
+
+The code below uses the Linux **/dev/i2c‑X** character device and the `i2c-dev` interface.  
+It demonstrates:
+
+1. Opening the I²C bus.  
+2. Setting the slave address.  
+3. Writing a register address, then reading back data.  
+
+```c
+/* i2c_rw_example.c
+ * Compile: gcc -Wall -o i2c_rw_example i2c_rw_example.c -li2c
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+
+/* Change these for your hardware */
+#define I2C_BUS        "/dev/i2c-1"   /* Bus number (e.g., i2c-1 on Raspberry Pi) */
+#define SLAVE_ADDR     0x50           /* 7‑bit address of the target device */
+#define REG_ADDR       0x10           /* Register to read/write */
+#define WRITE_VAL      0x37           /* Example data to write */
+
+int main(void) {
+    int fd = open(I2C_BUS, O_RDWR);
+    if (fd < 0) {
+        perror("Failed to open I2C bus");
+        return EXIT_FAILURE;
+    }
+
+    /* Set the slave address for all subsequent I/O */
+    if (ioctl(fd, I2C_SLAVE, SLAVE_ADDR) < 0) {
+        perror("Failed to set I2C slave address");
+        close(fd);
+        return EXIT_FAILURE;
+    }
+
+    /* ---------- Write a single byte to REG_ADDR ---------- */
+    uint8_t write_buf[2] = { REG_ADDR, WRITE_VAL };
+    if (write(fd, write_buf, sizeof(write_buf)) != sizeof(write_buf)) {
+        perror("I2C write failed");
+        close(fd);
+        return EXIT_FAILURE;
+    }
+    printf("Wrote 0x%02X to register 0x%02X\n", WRITE_VAL, REG_ADDR);
+
+    /* ---------- Read back the byte from REG_ADDR ---------- */
+    /* First, write the register address we want to read */
+    if (write(fd, &REG_ADDR, 1) != 1) {
+        perror("Failed to set register address for read");
+        close(fd);
+        return EXIT_FAILURE;
+    }
+
+    uint8_t read_val;
+    if (read(fd, &read_val, 1) != 1) {
+        perror("I2C read failed");
+        close(fd);
+        return EXIT_FAILURE;
+    }
+    printf("Read 0x%02X from register 0x%02X\n", read_val, REG_ADDR);
+
+    close(fd);
+    return EXIT_SUCCESS;
+}
+```
+
+### How It Works
+1. **Open the bus** – `open("/dev/i2c-1", O_RDWR)` obtains a file descriptor.
+2. **Select the slave** – `ioctl(fd, I2C_SLAVE, SLAVE_ADDR)` tells the driver which device to address.
+3. **Write** – Send the register address followed by the data byte in a single `write()` call (START → address + write → ACK → reg → ACK → data → ACK → STOP).
+4. **Read** –  
+   - First write the register address (`write(fd, &REG_ADDR, 1)`) to set the internal pointer.  
+   - Then `read(fd, &read_val, 1)` performs a repeated START, sends the slave address with the read bit, and receives the byte (ACK → data → NACK → STOP).
+
+### Adapting the Code
+- **Multiple bytes**: increase the buffer size and adjust the `write()`/`read()` lengths.  
+- **Different bus**: change `I2C_BUS` to `/dev/i2c-0`, `/dev/i2c-2`, etc.  
+- **Error handling**: for production code, consider retry loops and checking for `EIO` (bus errors).  
+
+This pattern works for most I²C peripherals on Linux‑based systems (Raspberry Pi, BeagleBone, embedded boards).
+
+
+
+## QnA
+## 1. Why I²C devices use a 7‑bit address space  
+
+- The original I²C specification (Philips 1982) allocated **7 bits** for the slave address, leaving the 8th bit of the address byte for the **R/W flag**.  
+- This design lets a single address byte convey both the target device (**7 bits**) and the operation direction (**1 bit**), keeping the protocol simple and minimizing bus traffic.  
+- With 7 bits you can address **2⁷ = 128** devices on one bus, which is sufficient for most PCB‑level applications.  
+- Later extensions introduced a **10‑bit addressing mode** for systems that need more than 128 devices, but the 7‑bit mode remains the default because it is widely supported and requires less hardware complexity.
+
+## 2. Why a register address must be written before a read  
+
+- Most I²C peripherals (e.g., EEPROMs, sensors, GPIO expanders) contain **multiple internal registers or memory locations**.  
+- The bus protocol itself only transfers bytes; it has no notion of “which register” you want.  
+- Writing the register address first **sets the internal pointer** of the slave to the desired location. The subsequent read operation then returns the data at that pointer.  
+- This two‑step sequence (write‑register → repeated START → read) ensures:  
+  1. **Deterministic addressing** – the slave knows exactly which byte to return.  
+  2. **Compatibility with sequential reads** – after the first read, the pointer often auto‑increments, allowing block reads without additional writes.  
+
+Thus, the write‑before‑read pattern is a convention imposed by the device’s internal register map, not a requirement of the I²C bus itself.
+
+### Basic i2c‑tools commands
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `i2cdetect -l` | List all I²C adapters (buses) present on the system | `i2cdetect -l` |
+| `i2cdetect -y <bus>` | Scan a specific bus for devices (non‑interactive) | `i2cdetect -y 1` |
+| `i2cget -y <bus> <addr> <reg> [mode]` | Read a single byte from a register | `i2cget -y 1 0x50 0x00` |
+| `i2cset -y <bus> <addr> <reg> <value> [mode]` | Write a single byte to a register | `i2cset -y 1 0x50 0x01 0x37` |
+| `i2cdump -y <bus> <addr> [mode]` | Dump all registers of a device (hex view) | `i2cdump -y 1 0x50` |
+| `i2cget -y <bus> <addr> <reg> w` | Read a 16‑bit word (big‑endian) | `i2cget -y 1 0x68 0x0A w` |
+| `i2cset -y <bus> <addr> <reg> <value> w` | Write a 16‑bit word | `i2cset -y 1 0x68 0x0A 0x1234 w` |
+
+### Typical workflow
+
+1. **Find the bus number**  
+
+   ```bash
+   i2cdetect -l
+   # Output example:
+   # i2c-1   i2c             SMBus I801 adapter at 0x0d0   SMBus adapter
+   ```
+
+2. **Scan the bus for devices**  
+
+   ```bash
+   i2cdetect -y 1
+   # Grid shows addresses like 0x20, 0x50, 0x68 …
+   ```
+
+3. **Read a register**  
+
+   ```bash
+   i2cget -y 1 0x68 0x00   # read byte at register 0x00 of device 0x68
+   ```
+
+4. **Write a register**  
+
+   ```bash
+   i2cset -y 1 0x68 0x01 0xA5   # write 0xA5 to register 0x01
+   ```
+
+5. **Dump all registers (quick view)**  
+
+   ```bash
+   i2cdump -y 1 0x68
+   ```
