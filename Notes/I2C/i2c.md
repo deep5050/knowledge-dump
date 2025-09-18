@@ -1,10 +1,12 @@
 https://www.electronicshub.org/basics-i2c-communication/
+<img width="1920" height="1080" alt="img_temp_640cdaca8fda03-87876134-17790437" src="https://github.com/user-attachments/assets/485a0ef6-2186-46a2-9dea-87805fa2896e" />
 
 ![Basics-of-I2C-Communication-I2C-Bus jpg](https://github.com/user-attachments/assets/ef30ae1d-465e-48d5-9d3b-e9e3a019aea4)
 ![Basics-of-I2C-Communication-Masters-Slaves jpg](https://github.com/user-attachments/assets/42b5d349-5346-4de4-b7e5-8bd569007d3a)
 ![Basics-of-I2C-Communication-Data-Transfer-Protocol jpg](https://github.com/user-attachments/assets/644ded1f-eaeb-417f-807d-9f0687c563f9)
 ![Basics-of-I2C-Communication-Start-Condition jpg](https://github.com/user-attachments/assets/2bc52a65-17d7-4add-b0ca-d0a09e5e0b23)
 ![Basics-of-I2C-Communication-Stop-Condition jpg](https://github.com/user-attachments/assets/ccaa6bc5-9540-4d55-b43c-bec2bf5a7191)
+<img width="1920" height="1080" alt="img_temp_640cdacabfc150-12140248-19788650" src="https://github.com/user-attachments/assets/26ed7bce-4bca-4e2d-993b-dea1ef3315c4" />
 
 ## Overview of I²C
 
