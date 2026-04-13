@@ -1,3 +1,9 @@
+https://docs.strongswan.org/docs/latest/howtos/ipsecProtocol.html
+<img width="1067" height="722" alt="image" src="https://github.com/user-attachments/assets/0631ac12-2d93-41b6-89b6-8517cecc2a8e" />
+
+
+---------------------
+
 ## Flow of IPsec Tunnel Establishment
 
 The process of establishing an IPsec tunnel involves several steps, typically categorized into key phases. Here’s a breakdown of the flow:
