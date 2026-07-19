@@ -1,13 +1,17 @@
-1. Boot stages of a embedded system ?
-2. What is SPL uboot ?
-3. What is the exact enty points (function names) to the kernel? when memory management, sheduler starts ? etc
-4. Complication, linking , assembling in details?
-5. What are your experinces in network security
-6. What exactly you did on IPSEC? what are the security features in IPSEC?
-7. In depth concepts on IPSEC.. step by step
-8. skbuff related questions
-9. C++ object oriented few question (singleton, ......)
-10. Union and structure padding related tricky question... (I failed here)
-11. Bitwise and linked related programs
+**Embedded‑System & Security Topics**  
 
-12. ........................ don't remember
+1. Boot stages of an embedded system.  
+2. What is SPL (Secondary Program Loader) in U‑Boot?  
+3. What are the exact entry points (function names) to the kernel? When do memory management and the scheduler start?  
+4. Compilation, linking, and assembling – detailed explanation.  
+5. Your experience with network security.  
+6. What exactly did you do with IPsec, and what security features does IPsec provide?  
+7. In‑depth, step‑by‑step concepts of IPsec.  
+8. SKB‑related questions.  
+9. C++ object‑oriented questions (e.g., Singleton pattern, …).  
+10. Tricky questions about unions, structures, and padding. Tricky C code for in detailed union and structure padding comcepts
+11. Bitwise‑operation and linked‑list programming problems.
+
+They mostly asked kernel boot and core theoritical questions
+
+Qualys is a security product company
